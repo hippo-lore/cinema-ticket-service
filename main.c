@@ -2,224 +2,307 @@
 <html lang="uk">
 <head>
   <meta charset="UTF-8">
-  <title>КіноКвитки Онлайн</title>
+  <title>Кіносервіс</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #f5f5f5;
-      padding: 30px;
+      margin: 0;
+      padding: 0;
+      background: #f9f9f9;
+    }
+    header {
+      background: #222;
+      color: white;
+      padding: 20px;
       text-align: center;
     }
-    h1 {
-      color: #222;
+    nav {
+      background: #444;
+      padding: 10px;
+      text-align: center;
     }
-    .movie-grid {
+    nav a {
+      color: white;
+      margin: 0 15px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    section {
+      padding: 30px;
+      max-width: 1100px;
+      margin: auto;
+    }
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+
+    .movies {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
       gap: 20px;
     }
-    .movie-card {
-      background: #fff;
-      border-radius: 10px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      width: 260px;
-      text-align: left;
-      overflow: hidden;
-    }
-    .movie-card img {
-      width: 100%;
-      height: 360px;
-      object-fit: cover;
-    }
-    .movie-info {
-      padding: 15px;
-    }
-    .movie-title {
-      font-size: 18px;
-      font-weight: bold;
-    }
-    .movie-desc {
-      font-size: 14px;
-      margin-top: 5px;
-      color: #555;
-    }
-    .movie-card button {
-      margin-top: 10px;
-      background: #1976d2;
-      color: white;
-      padding: 10px;
-      border: none;
-      width: 100%;
-      cursor: pointer;
-      border-radius: 0 0 10px 10px;
-      font-size: 16px;
-    }
-    .seats {
-      display: grid;
-      grid-template-columns: repeat(5, 60px);
-      gap: 10px;
-      justify-content: center;
-      margin: 20px auto;
-      max-width: 300px;
-    }
-    .seat {
-      width: 50px;
-      height: 50px;
-      background: #ccc;
-      border-radius: 6px;
-      cursor: pointer;
-      line-height: 50px;
+    .movie {
+      background: white;
+      border-radius: 8px;
+      width: 220px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
       text-align: center;
     }
-    .seat.selected {
-      background: #4caf50;
-      color: white;
+    .movie img {
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
+      border-radius: 8px 8px 0 0;
     }
-    select, button.confirm-btn {
-      padding: 10px;
+    .movie p {
       margin: 10px;
-      font-size: 16px;
     }
-    .result {
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
       margin-top: 20px;
-      font-size: 18px;
     }
-    #bookingSection {
+    th, td {
+      padding: 12px;
+      border: 1px solid #ccc;
+      text-align: center;
+    }
+    th {
+      background: #eee;
+    }
+
+    form {
+      max-width: 500px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+    select, input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+    }
+    button {
+      margin-top: 20px;
+      background: #1976d2;
+      color: white;
+      border: none;
+      padding: 12px;
+      width: 100%;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    .contact-info p {
+      font-size: 16px;
+      margin: 10px 0;
+    }
+
+    footer {
+      background: #222;
+      color: white;
+      text-align: center;
+      padding: 20px;
       margin-top: 40px;
+    }
+    footer a {
+      color: #90caf9;
+      margin: 0 10px;
+      text-decoration: none;
+    }
+
+    /* --- Модальне вікно --- */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 999;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.5);
+    }
+    .modal-content {
+      background-color: #fff;
+      margin: 15% auto;
+      padding: 30px;
+      border: 1px solid #888;
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    }
+    .modal-content h3 {
+      margin-bottom: 20px;
+    }
+    .close-btn {
+      background-color: #1976d2;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
 
-  <h1>🎬 Онлайн сервіс купівлі квитків</h1>
-  <div class="movie-grid" id="movies"></div>
+  <header>
+    <h1>🎬 Кіносервіс</h1>
+    <p>Онлайн сервіс купівлі квитків у кінотеатр</p>
+  </header>
 
-  <div id="bookingSection" style="display:none;">
-    <h2>Оберіть час та місце</h2>
-    <div>
-      <label for="time">Час:</label>
+  <nav>
+    <a href="#movies">Фільми</a>
+    <a href="#schedule">Розклад</a>
+    <a href="#tickets">Купити квиток</a>
+    <a href="#contacts">Контакти</a>
+  </nav>
+
+  <section id="movies">
+    <h2>🎞 Актуальні фільми</h2>
+    <div class="movies">
+      <div class="movie">
+        <img src="https://upload.wikimedia.org/wikipedia/en/6/6e/Oppenheimer_%282023%29.jpg" alt="Оппенгеймер">
+        <p><strong>Оппенгеймер</strong><br>Драма, Історичний — 180 хв</p>
+      </div>
+      <div class="movie">
+        <img src="https://upload.wikimedia.org/wikipedia/en/0/0e/Guardians_of_the_Galaxy_Vol_3_poster.jpg" alt="Вартові Галактики 3">
+        <p><strong>Вартові Галактики 3</strong><br>Фантастика, Пригоди — 150 хв</p>
+      </div>
+      <div class="movie">
+        <img src="https://upload.wikimedia.org/wikipedia/en/0/0b/Barbie_2023_poster.jpg" alt="Барбі">
+        <p><strong>Барбі</strong><br>Комедія, Фентезі — 110 хв</p>
+      </div>
+      <div class="movie">
+        <img src="https://upload.wikimedia.org/wikipedia/en/b/bc/Interstellar_film_poster.jpg" alt="Інтерстеллар">
+        <p><strong>Інтерстеллар</strong><br>Фантастика, Драма — 169 хв</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="schedule">
+    <h2>🗓 Розклад сеансів</h2>
+    <table>
+      <tr>
+        <th>Фільм</th>
+        <th>Дата</th>
+        <th>Час</th>
+        <th>Зал</th>
+      </tr>
+      <tr>
+        <td>Оппенгеймер</td>
+        <td>14.07.2025</td>
+        <td>18:00</td>
+        <td>Зал 1</td>
+      </tr>
+      <tr>
+        <td>Барбі</td>
+        <td>14.07.2025</td>
+        <td>15:00</td>
+        <td>Зал 2</td>
+      </tr>
+      <tr>
+        <td>Вартові Галактики 3</td>
+        <td>15.07.2025</td>
+        <td>20:00</td>
+        <td>Зал 1</td>
+      </tr>
+    </table>
+  </section>
+
+  <section id="tickets">
+    <h2>🎟 Купити квиток</h2>
+    <form>
+      <label for="film">Фільм</label>
+      <select id="film">
+        <option>Оппенгеймер</option>
+        <option>Барбі</option>
+        <option>Вартові Галактики 3</option>
+        <option>Інтерстеллар</option>
+      </select>
+
+      <label for="date">Дата</label>
+      <input type="date" id="date">
+
+      <label for="time">Час</label>
       <select id="time">
-        <option disabled selected>-- Виберіть час --</option>
         <option>12:00</option>
         <option>15:00</option>
         <option>18:00</option>
         <option>21:00</option>
       </select>
+
+      <label for="count">Кількість квитків</label>
+      <input type="number" id="count" min="1" max="10" value="1">
+
+      <button type="submit">Оформити замовлення</button>
+    </form>
+  </section>
+
+  <section id="contacts">
+    <h2>📞 Контакти</h2>
+    <div class="contact-info">
+      <p>Телефон: +380 67 123 4567</p>
+      <p>Ел. пошта: support@kinoservice.ua</p>
+      <p>Адреса: м. Київ, вул. Кіношна, 7</p>
+      <p>Графік роботи: щодня з 10:00 до 22:00</p>
     </div>
+  </section>
 
-    <h3>Оберіть місце:</h3>
-    <div class="seats" id="seats"></div>
+  <footer>
+    <p>© 2025 Кіносервіс. Усі права захищено.</p>
+    <p>
+      <a href="#">Facebook</a> |
+      <a href="#">Instagram</a> |
+      <a href="#">Telegram</a>
+    </p>
+  </footer>
 
-    <button class="confirm-btn" onclick="confirmBooking()">Підтвердити замовлення</button>
-    <div class="result" id="result"></div>
+  <!-- Модальне вікно -->
+  <div id="confirmationModal" class="modal">
+    <div class="modal-content">
+      <h3>✅ Бронювання завершено!</h3>
+      <p>Дякуємо за замовлення. Ваші квитки вже в обробці.</p>
+      <button class="close-btn" onclick="closeModal()">ОК</button>
+    </div>
   </div>
 
+  <!-- Скрипт -->
   <script>
-    const movieList = [
-      {
-        title: "Оппенгеймер",
-        description: "Біографічна драма про створення атомної бомби. Режисер Крістофер Нолан.",
-        genre: "Драма, Історичний",
-        duration: "180 хв",
-        poster: "https://m.media-amazon.com/images/M/MV5BN2EyZjM3YTct.jpg"
-      },
-      {
-        title: "Вартові Галактики 3",
-        description: "Команда Вартових знову об’єднується для нової міжгалактичної пригоди.",
-        genre: "Фантастика, Пригоди",
-        duration: "150 хв",
-        poster: "https://m.media-amazon.com/images/M/MV5BMjMxMjM0Nzg3Nl5BMl5BanBnXkFtZTgwMTU5MjE2NzM@._V1_.jpg"
-      },
-      {
-        title: "Барбі",
-        description: "Життя в Рожевому Світі змінюється, коли Барбі вирушає у реальний світ.",
-        genre: "Комедія, Фентезі",
-        duration: "110 хв",
-        poster: "https://m.media-amazon.com/images/M/MV5BYTg0NjM0MTAt.jpg"
-      },
-      {
-        title: "Інтерстеллар",
-        description: "Астронавти подорожують через кротову нору в пошуках нової планети.",
-        genre: "Фантастика, Драма",
-        duration: "169 хв",
-        poster: "https://m.media-amazon.com/images/M/MV5BMjIxMjgxNzM4MF5BMl5BanBnXkFtZTgwNzUxNzE3MjE@._V1_FMjpg_UX1000_.jpg"
-      },
-      {
-        title: "Дюна: Частина друга",
-        description: "Пол Атрейдес веде боротьбу за виживання на пустельній планеті.",
-        genre: "Епік, Фантастика",
-        duration: "165 хв",
-        poster: "https://m.media-amazon.com/images/M/MV5BZjMxN2EzZDct.jpg"
-      },
-      {
-        title: "Коко",
-        description: "Мігель потрапляє у світ мертвих, щоб знайти історію своєї родини.",
-        genre: "Анімація, Пригоди",
-        duration: "105 хв",
-        poster: "https://m.media-amazon.com/images/M/MV5BMjExN2U1M2Et.jpg"
-      }
-    ];
+    const form = document.querySelector("form");
+    const modal = document.getElementById("confirmationModal");
 
-    const moviesDiv = document.getElementById("movies");
-    const seatsDiv = document.getElementById("seats");
-    let selectedMovie = null;
-    let selectedSeat = null;
-
-    movieList.forEach((movie, index) => {
-      const card = document.createElement("div");
-      card.className = "movie-card";
-      card.innerHTML = `
-        <img src="${movie.poster}" alt="${movie.title}">
-        <div class="movie-info">
-          <div class="movie-title">${movie.title}</div>
-          <div class="movie-desc">${movie.description}</div>
-          <div class="movie-desc"><b>Жанр:</b> ${movie.genre}</div>
-          <div class="movie-desc"><b>Тривалість:</b> ${movie.duration}</div>
-        </div>
-        <button onclick="selectMovie(${index})">Обрати</button>
-      `;
-      moviesDiv.appendChild(card);
+    form.addEventListener("submit", function(event) {
+      event.preventDefault();
+      modal.style.display = "block";
+      form.reset();
     });
 
-    function selectMovie(index) {
-      selectedMovie = movieList[index];
-      document.getElementById("bookingSection").style.display = "block";
-      window.scrollTo(0, document.body.scrollHeight);
-      generateSeats();
+    function closeModal() {
+      modal.style.display = "none";
     }
 
-    function generateSeats() {
-      seatsDiv.innerHTML = "";
-      selectedSeat = null;
-      for (let i = 1; i <= 20; i++) {
-        const seat = document.createElement("div");
-        seat.className = "seat";
-        seat.innerText = i;
-        seat.addEventListener("click", () => {
-          document.querySelectorAll(".seat").forEach(s => s.classList.remove('selected'));
-          seat.classList.add('selected');
-          selectedSeat = i;
-        });
-        seatsDiv.appendChild(seat);
+    window.onclick = function(event) {
+      if (event.target === modal) {
+        modal.style.display = "none";
       }
-    }
-
-    function confirmBooking() {
-      const time = document.getElementById("time").value;
-      if (!selectedMovie || !time || !selectedSeat) {
-        alert("Будь ласка, оберіть фільм, час і місце.");
-        return;
-      }
-
-      document.getElementById("result").innerHTML = `
-        ✅ <b>Замовлення підтверджено!</b><br>
-        🎬 Фільм: <b>${selectedMovie.title}</b><br>
-        🕒 Час: <b>${time}</b><br>
-        💺 Місце: <b>${selectedSeat}</b>
-      `;
     }
   </script>
 
 </body>
-</html>https://www.onlinegdb.com/#tab-stdin
+</html>
